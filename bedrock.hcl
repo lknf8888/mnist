@@ -11,8 +11,8 @@ train {
         ]
         
         resources {
-            cpu = "500m"
-            memory = "500M"
+            cpu = "5G"
+            memory = "50G"
             // gpu = "1"  // uncomment this in order to use GPU. Only integer values are allowed.
         }
     }
