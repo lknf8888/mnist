@@ -1,3 +1,5 @@
+version = "1.0"
+
 train {
     step train {
         image = "python:3.7"
