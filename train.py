@@ -62,11 +62,14 @@ def mnist_model(verbose=1, callbacks=[]):
             callbacks=callbacks
         )
     
-    bedrock.log_metric("Accuracy", training_log.history['accuracy'])
-    bedrock.log_metric("Loss", training_log.history['loss'])
+    logger = logging.getLogger(__name__)
+    bedrock = BedrockApi(logger)
+
+    bedrock.log_metric("Accuracy", training_log.history['accuracy'][-1])
+    bedrock.log_metric("Loss", training_log.history['loss'][-1])
     
-    bedrock.log_metric("Validation Accuracy", training_log.history['val_accuracy'])
-    bedrock.log_metric("Validation Loss", training_log.history['val_loss'])
+    bedrock.log_metric("Validation Accuracy", training_log.history['val_accuracy'][-1])
+    bedrock.log_metric("Validation Loss", training_log.history['val_loss'][-1])
     
     # serialize model to JSON
     model_json = m.to_json()
