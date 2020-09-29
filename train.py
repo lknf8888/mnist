@@ -71,6 +71,9 @@ def mnist_model(verbose=1, callbacks=[]):
     bedrock.log_metric("Validation Accuracy", training_log.history['val_accuracy'][-1])
     bedrock.log_metric("Validation Loss", training_log.history['val_loss'][-1])
     
+    y_pred = np.max(m.predict(ytest),axis=-1)
+    bedrock.log_chart_data(ytest.astype(int).tolist(),y_pred.flatten().tolist())
+    
     # serialize model to JSON
     model_json = m.to_json()
     with open("/artefact/model.json", "w") as json_file:
