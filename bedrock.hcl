@@ -13,7 +13,7 @@ train {
         resources {
             cpu = "1"
             memory = "16G"
-            gpu = "1"
+            //gpu = "1"
         }
     }
     
