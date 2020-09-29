@@ -7,6 +7,8 @@ from keras.layers import Dropout, BatchNormalization, LeakyReLU, Dense, Input, A
 from keras.models import Model
 from keras.utils.np_utils import to_categorical
 
+import logging
+from bedrock_client.bedrock.api import BedrockApi
 
 def build_model():
     x = Input((28 * 28,), name="x")
@@ -40,7 +42,7 @@ def mnist_model(verbose=1, callbacks=[]):
     m = build_model()
     (xtrain, ytrain), (xtest, ytest) = mnist_data()
     if int(keras.__version__.split(".")[0]) == 2:
-        m.fit(
+        training_log = m.fit(
             xtrain,
             ytrain,
             validation_data=(xtest, ytest),
@@ -50,7 +52,7 @@ def mnist_model(verbose=1, callbacks=[]):
             callbacks=callbacks
         )
     else:
-        m.fit(
+        training_log = m.fit(
             xtrain,
             ytrain,
             validation_data=(xtest, ytest),
@@ -59,7 +61,13 @@ def mnist_model(verbose=1, callbacks=[]):
             verbose=verbose,
             callbacks=callbacks
         )
-
+    
+    bedrock.log_metric("Accuracy", training_log.history['accuracy'])
+    bedrock.log_metric("Loss", training_log.history['loss'])
+    
+    bedrock.log_metric("Validation Accuracy", training_log.history['val_accuracy'])
+    bedrock.log_metric("Validation Loss", training_log.history['val_loss'])
+    
     # serialize model to JSON
     model_json = m.to_json()
     with open("/artefact/model.json", "w") as json_file:
