@@ -75,8 +75,9 @@ def mnist_model(verbose=1, callbacks=[]):
     pred_label = np.amax(y_pred,axis=-1)
     y_label = np.amax(ytest,axis=-1)
     y_pred = np.max(y_pred, axis=-1)
+    correct = np.equal(pred_label, y_label)
     
-    bedrock.log_chart_data(y_label.astype(int).tolist(),y_pred.flatten().tolist())
+    bedrock.log_chart_data(correct.astype(int).tolist(),y_pred.flatten().tolist())
     
     # serialize model to JSON
     model_json = m.to_json()
